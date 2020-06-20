@@ -1,3 +1,27 @@
+//---------------------------------------------------------------------
+// Glitch 24/7
+// Required to let uptime robot waving our bot.
+//---------------------------------------------------------------------
+
+const express = require("express");
+const http = require("http");
+
+const app = express();
+
+app.use(express.json());
+
+app.get("/", (_, res) => res.send("hi"));
+app.listen(process.env.PORT);
+
+setInterval(() => {
+  http.get(`http://${process.env.PROJECT_DOMAIN}.herokuapp.com/`);
+}, 224000);
+
+// End of Glitch 24/7
+
+
+
+
 const mineflayer = require('mineflayer');
 const navigatePlugin = require('mineflayer-navigate')(mineflayer);
 
@@ -45,4 +69,15 @@ bot.on('chat', function(username, message) {
   } else if (message === 'stop') {
     bot.navigate.stop();
   }
+});
+
+
+bot.on("error", err => console.log(err)); //triggers when there's an error and logs it into the console
+
+bot.on("login", () => { //triggers when the bot joins the server
+console.log(bot.username + " is online"); //logs the username of the bot when the bot is online
+});
+bot.on("end", () => { //triggers when the bot leaves/gets kicked
+console.log("The bot disconnected, reconnecting..."); //says "The bot disconnected, reconnecting... in console
+process.exit(0);
 });
